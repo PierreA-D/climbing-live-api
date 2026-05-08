@@ -1,0 +1,283 @@
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║           🎉 CLIMBING LIVE - ARCHITECTURE MULTI-REPO CRÉÉE 🎉               ║
+║                                                                               ║
+║                          Repos séparés Frontend/Backend                       ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+📍 LOCALISATION
+═════════════════════════════════════════════════════════════════════════════════
+
+E:\Developpement\Projet\
+│
+├── climbing-live/                 ← REPO 1: FRONTEND (Next.js - existant)
+│   ├── app/
+│   │   ├── page.tsx              # Page d'accueil
+│   │   ├── admin/page.tsx        # Console admin
+│   │   ├── onboard/page.tsx      # Onboarding
+│   │   ├── components/           # Composants React
+│   │   ├── api/cameras           # Routes API publiques
+│   │   └── globals.css
+│   ├── public/
+│   ├── package.json              # Next.js, React, Video.js, TailwindCSS
+│   └── .env.local                # NEXT_PUBLIC_API_URL=http://localhost:8000
+│
+├── climbing-live-api/            ← REPO 2: BACKEND (Symfony - NOUVEAU) ✨
+│   ├── config/
+│   │   ├── bundles.php           # Symfony bundles
+│   │   ├── packages/             # Framework, Doctrine, Serializer
+│   │   ├── routes.yaml           # API routes
+│   │   └── services.yaml         # DI Container
+│   ├── src/
+│   │   ├── Entity/               # ORM Entities
+│   │   │   ├── Athlete.php       # Grimpeur
+│   │   │   ├── Competition.php   # Compétition
+│   │   │   └── Camera.php        # Caméra
+│   │   ├── Controller/           # REST API Controllers
+│   │   │   ├── AthleteController.php
+│   │   │   ├── CompetitionController.php
+│   │   │   └── CameraController.php
+│   │   ├── Repository/           # DB Queries
+│   │   │   ├── AthleteRepository.php
+│   │   │   ├── CompetitionRepository.php
+│   │   │   └── CameraRepository.php
+│   │   └── Kernel.php            # Bootstrap Symfony
+│   ├── public/index.php          # Entry point
+│   ├── bin/console               # Symfony CLI
+│   ├── composer.json             # Symfony, Doctrine, PHP packages
+│   ├── docker-compose.yml        # PHP 8.2 + MySQL 8.0
+│   ├── .env                      # Variables par défaut
+│   ├── .env.local                # Variables locales (à créer)
+│   ├── README.md                 # Overview
+│   ├── INSTALL.md                # Installation guide
+│   ├── EXAMPLES.md               # 50+ exemples cURL
+│   ├── API_SPEC.md               # Spec de l'API
+│   ├── CHECKLIST.md              # Tâches à faire
+│   └── FILES_CREATED.md          # Inventaire complet
+│
+├── SUMMARY.md                     ← Ce résumé
+├── ARCHITECTURE.md                ← Doc d'architecture complète
+├── INTEGRATION_FRONTEND.md        ← Guide d'intégration Frontend
+├── README_REPOS.md                ← Overview des 2 repos
+└── verify-backend.sh              ← Script de vérification
+
+
+📊 STATISTIQUES
+═════════════════════════════════════════════════════════════════════════════════
+
+Fichiers créés backend:       37
+├── PHP (ORM, Controllers):   12
+├── YAML (Configuration):     11
+├── Documentation:             8
+├── Docker:                    2
+├── Configuration:             4
+
+Entités créées:                3
+├── Athlete (grimpeurs)
+├── Competition (compétitions)
+└── Camera (caméras)
+
+Endpoints API:                15
+├── /api/athletes       (5 routes CRUD)
+├── /api/competitions   (5 routes CRUD)
+└── /api/cameras        (5 routes CRUD)
+
+
+🔗 COMMUNICATION FRONTEND ↔ BACKEND
+═════════════════════════════════════════════════════════════════════════════════
+
+Frontend (Next.js)          Backend (Symfony)
+  :3000                       :8000
+    │                          │
+    └─ GET /api/athletes ────→ GET /api/athletes
+    └─ POST /api/athletes ────→ POST /api/athletes
+    └─ PATCH /api/athletes/{id} → PATCH /api/athletes/{id}
+    └─ DELETE /api/athletes/{id}→ DELETE /api/athletes/{id}
+    
+    └─ GET /api/competitions ──→ GET /api/competitions
+    └─ POST /api/competitions ──→ POST /api/competitions
+    
+    └─ GET /api/cameras ────────→ GET /api/cameras
+    └─ PATCH /api/cameras/{id} ──→ PATCH /api/cameras/{id}
+
+
+🚀 DÉMARRAGE RAPIDE
+═════════════════════════════════════════════════════════════════════════════════
+
+# TERMINAL 1: Backend
+cd E:\Developpement\Projet\climbing-live-api
+composer install
+bin/console doctrine:database:create
+bin/console doctrine:schema:create
+symfony serve
+# → http://localhost:8000/api/athletes
+
+
+# TERMINAL 2: Frontend
+cd E:\Developpement\Projet\climbing-live
+npm install
+npm run dev
+# → http://localhost:3000/admin
+
+
+# TEST: Ajouter des données
+curl -X POST http://localhost:8000/api/athletes \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"Jean","lastName":"Martin","bib":"001","category":"senior"}'
+
+
+✅ PRÊT POUR
+═════════════════════════════════════════════════════════════════════════════════
+
+[✓] Structure Backend complète
+[✓] 3 Entités ORM (Athlete, Competition, Camera)
+[✓] 15 Endpoints REST
+[✓] Configuration Doctrine (SQLite dev, MySQL prod)
+[✓] Configuration Docker (PHP 8.2 + MySQL 8.0)
+[✓] Documentation complète
+[✓] Exemples d'utilisation
+
+[ ] CORS configuration
+[ ] JWT Authentication
+[ ] Validation des données
+[ ] Tests unitaires
+[ ] Intégration Frontend (voir INTEGRATION_FRONTEND.md)
+
+
+📝 PROCHAINES ÉTAPES
+═════════════════════════════════════════════════════════════════════════════════
+
+PHASE 1: Initialisation Backend ✅ (TERMINÉE)
+───────────────────────────────────────────────
+[x] Créer structure Symfony
+[x] Créer 3 entités + repositories + controllers
+[x] Configuration Doctrine
+[x] Configuration Docker
+[x] Documentation
+
+PHASE 2: Configuration Backend
+──────────────────────────────
+[ ] CORS (permettre requêtes du Frontend)
+[ ] JWT Authentication (sécuriser API)
+[ ] Validation (Constraints Symfony)
+[ ] Exception handling custom
+[ ] Logging (Monolog)
+
+PHASE 3: Intégration Frontend (voir INTEGRATION_FRONTEND.md)
+───────────────────────────────────────────────────────────
+[ ] Créer lib/api.ts
+[ ] Ajouter .env.local
+[ ] Supprimer /api/backend/* du Frontend
+[ ] Intégrer appels API dans composants
+[ ] Tester la communication
+
+PHASE 4: Tests & Sécurité
+──────────────────────────
+[ ] Tests unitaires Backend (PHPUnit)
+[ ] Tests Frontend (Jest)
+[ ] Tests d'intégration
+[ ] Vérification CORS
+[ ] Authentification JWT
+
+
+📚 DOCUMENTATION IMPORTANTE
+═════════════════════════════════════════════════════════════════════════════════
+
+Dans climbing-live-api/:
+  📖 README.md              → Overview du projet
+  📖 INSTALL.md             → Installation détaillée
+  📖 EXAMPLES.md            → 50+ exemples cURL
+  📖 API_SPEC.md            → Spécification API complète
+  📖 CHECKLIST.md           → Tâches d'implémentation
+  📖 FILES_CREATED.md       → Inventaire complet des fichiers
+
+À la racine (E:\Developpement\Projet\):
+  📖 SUMMARY.md             → Ce fichier
+  📖 ARCHITECTURE.md        → Architecture multi-repo
+  📖 INTEGRATION_FRONTEND.md→ Guide d'intégration
+  📖 README_REPOS.md        → Overview des 2 repos
+
+
+🔐 VARIABLES D'ENVIRONNEMENT
+═════════════════════════════════════════════════════════════════════════════════
+
+Backend (.env.local):
+  APP_ENV=dev
+  APP_SECRET=your-secret-key
+  DATABASE_URL="sqlite:///%kernel.project_dir%/var/app.db"
+  CORS_ALLOW_ORIGIN="^http://localhost:3000$"
+
+Frontend (.env.local):
+  NEXT_PUBLIC_API_URL=http://localhost:8000
+
+
+🛠️ TECHNOLOGIES UTILISÉES
+═════════════════════════════════════════════════════════════════════════════════
+
+BACKEND:
+  • Symfony 7.2          (Framework PHP moderne)
+  • Doctrine ORM 2.16    (Mapping objet-relationnel)
+  • MySQL 8.0            (Production DB)
+  • SQLite               (Development DB)
+  • PHP 8.2              (Langage)
+  • Docker               (Containerisation)
+
+FRONTEND (INCHANGÉ):
+  • Next.js 16           (Framework React)
+  • React 19             (UI library)
+  • TypeScript           (Typage statique)
+  • TailwindCSS v4       (Styles)
+  • Video.js             (Lecteur HLS)
+
+
+✨ FEATURES PRINCIPALES
+═════════════════════════════════════════════════════════════════════════════════
+
+Athletes:
+  ├── ID unique
+  ├── Prénom + Nom
+  ├── Dossard
+  ├── Catégorie (senior, elite, etc.)
+  └── Timestamp création
+
+Competitions:
+  ├── ID unique
+  ├── Nom + Localisation
+  ├── Dates (début/fin)
+  ├── Status (scheduled, live, finished)
+  └── Timestamp création
+
+Cameras:
+  ├── ID unique
+  ├── Nom + Localisation
+  ├── Status (online, offline)
+  ├── URLs RTMP/HLS
+  ├── Authorized flag
+  └── Timestamp création
+
+
+🎯 OBJECTIF
+═════════════════════════════════════════════════════════════════════════════════
+
+Créer une architecture scalable et maintenable:
+
+  ✓ Séparation Frontend/Backend complète
+  ✓ API REST RESTful et minimaliste
+  ✓ Base de données bien structurée
+  ✓ Documentation complète
+  ✓ Prête pour mise en production
+  ✓ Prête pour authentification/autorisation
+  ✓ Prête pour websockets (live updates)
+
+
+═════════════════════════════════════════════════════════════════════════════════
+                      STATUS: ✅ PRÊT POUR DÉVELOPPEMENT
+═════════════════════════════════════════════════════════════════════════════════
+
+Créé par: GitHub Copilot
+Date: 8 mai 2026
+Version: 1.0 - Initial Backend Setup
+```
