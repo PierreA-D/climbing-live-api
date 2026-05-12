@@ -159,8 +159,8 @@ symfony/orm-pack           # ORM (Doctrine)
 symfony/serializer-pack    # JSON serialization
 doctrine/orm               # Object-Relational Mapping
 doctrine/dbal              # Database Abstraction Layer
-symfony/validator          # Validation (à ajouter)
-symfony/security-bundle    # Auth (à ajouter)
+symfony/validator          # Validation
+symfony/security-bundle    # Auth
 ```
 
 ---
