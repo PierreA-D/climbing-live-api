@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\Category;
+use App\Enum\Status;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -31,17 +35,29 @@ class Competition
     #[Groups(['competition:read', 'competition:list'])]
     private ?\DateTimeImmutable $endAt = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(enumType: Status::class, nullable: true)]
     #[Groups(['competition:read', 'competition:list'])]
-    private string $status = 'scheduled';
+    private ?Status $status = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
+
+    /**
+     * @var Collection<int, Camera>
+     */
+    #[ORM\OneToMany(targetEntity: Camera::class, mappedBy: 'competition')]
+    #[Groups(['competition:read', 'competition:list'])]
+    private Collection $cameras;
+
+    #[ORM\Column(enumType: Category::class, nullable: true)]
+    #[Groups(['competition:read', 'competition:list'])]
+    private ?Category $category = null;
 
     public function __construct()
     {
         $this->startAt = new \DateTimeImmutable();
         $this->createdAt = new \DateTimeImmutable();
+        $this->cameras = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,12 +109,12 @@ class Competition
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?Status
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(Status $status): self
     {
         $this->status = $status;
         return $this;
@@ -107,5 +123,46 @@ class Competition
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return Collection<int, Camera>
+     */
+    public function getCameras(): Collection
+    {
+        return $this->cameras;
+    }
+
+    public function addCamera(Camera $camera): static
+    {
+        if (!$this->cameras->contains($camera)) {
+            $this->cameras->add($camera);
+            $camera->setCompetition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCamera(Camera $camera): static
+    {
+        if ($this->cameras->removeElement($camera)) {
+            if ($camera->getCompetition() === $this) {
+                $camera->setCompetition(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }

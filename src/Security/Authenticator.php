@@ -29,7 +29,8 @@ class Authenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return preg_match('#^/api/(athletes|cameras|competitions)(?:/.*)?$#', $request->getPathInfo()) === 1;
+        return $request->getMethod() !== Request::METHOD_GET
+            && preg_match('#^/api/(athletes|cameras|competitions)(?:/.*)?$#', $request->getPathInfo()) === 1;
     }
 
     public function authenticate(Request $request): Passport

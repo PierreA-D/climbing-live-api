@@ -32,6 +32,7 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/api/auth/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/(athletes|cameras|competitions)(?:/.*)?$, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/(athletes|cameras|competitions)(?:/.*)?$, roles: ROLE_ADMIN }
 
 when@test:

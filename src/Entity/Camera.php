@@ -41,6 +41,9 @@ class Camera
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\ManyToOne(inversedBy: 'cameras')]
+    private ?Competition $competition = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -126,5 +129,17 @@ class Camera
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getCompetition(): ?Competition
+    {
+        return $this->competition;
+    }
+
+    public function setCompetition(?Competition $competition): static
+    {
+        $this->competition = $competition;
+
+        return $this;
     }
 }
