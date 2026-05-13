@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Camera\Status;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -22,9 +23,9 @@ class Camera
     #[Groups(['camera:read', 'camera:list'])]
     private string $location = '';
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(enumType: Status::class)]
     #[Groups(['camera:read', 'camera:list'])]
-    private string $status = 'offline';
+    private Status $status = Status::OFFLINE;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['camera:read', 'camera:list'])]
@@ -39,14 +40,44 @@ class Camera
     private bool $authorized = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['camera:read', 'camera:list'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'cameras')]
     private ?Competition $competition = null;
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['camera:read', 'camera:list'])]
+    private string $token = '';
+
+    #[ORM\Column]
+    #[Groups(['camera:read', 'camera:list'])]
+    private bool $blocked = false;
+
+    #[ORM\Column(type: 'json')]
+    #[Groups(['camera:read', 'camera:list'])]
+    private array $allowedPaths = [];
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['camera:read', 'camera:list'])]
+    private ?\DateTimeImmutable $lastSeenAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['camera:read', 'camera:list'])]
+    private ?string $lastIp = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['camera:read', 'camera:list'])]
+    private ?string $lastProtocol = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['camera:read', 'camera:list'])]
+    private ?string $currentPath = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->lastSeenAt = new \DateTimeImmutable();
     }
 
     public function getId(): string
@@ -82,12 +113,12 @@ class Camera
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?Status
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(Status $status): self
     {
         $this->status = $status;
         return $this;
@@ -139,6 +170,90 @@ class Camera
     public function setCompetition(?Competition $competition): static
     {
         $this->competition = $competition;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function isBlocked(): ?bool
+    {
+        return $this->blocked;
+    }
+
+    public function setBlocked(bool $blocked): static
+    {
+        $this->blocked = $blocked;
+
+        return $this;
+    }
+
+    public function getAllowedPaths(): array
+    {
+        return $this->allowedPaths;
+    }
+
+    public function setAllowedPaths(array $allowedPaths): static
+    {
+        $this->allowedPaths = $allowedPaths;
+
+        return $this;
+    }
+
+    public function getLastSeenAt(): ?\DateTimeImmutable
+    {
+        return $this->lastSeenAt;
+    }
+
+    public function setLastSeenAt(?\DateTimeImmutable $lastSeenAt): static
+    {
+        $this->lastSeenAt = $lastSeenAt;
+
+        return $this;
+    }
+
+    public function getLastIp(): ?string
+    {
+        return $this->lastIp;
+    }
+
+    public function setLastIp(?string $lastIp): static
+    {
+        $this->lastIp = $lastIp;
+
+        return $this;
+    }
+
+    public function getLastProtocol(): ?string
+    {
+        return $this->lastProtocol;
+    }
+
+    public function setLastProtocol(?string $lastProtocol): static
+    {
+        $this->lastProtocol = $lastProtocol;
+
+        return $this;
+    }
+
+    public function getCurrentPath(): ?string
+    {
+        return $this->currentPath;
+    }
+
+    public function setCurrentPath(?string $currentPath): static
+    {
+        $this->currentPath = $currentPath;
 
         return $this;
     }

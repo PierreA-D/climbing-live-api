@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Enum\Category;
-use App\Enum\Status;
+use App\Enum\Competition\Category;
+use App\Enum\Competition\Status;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +45,7 @@ class Competition
     /**
      * @var Collection<int, Camera>
      */
-    #[ORM\OneToMany(targetEntity: Camera::class, mappedBy: 'competition')]
+    #[ORM\OneToMany(targetEntity: Camera::class, mappedBy: 'competition', cascade: ['remove', 'persist'])]
     #[Groups(['competition:read', 'competition:list'])]
     private Collection $cameras;
 

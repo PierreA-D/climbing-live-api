@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateCamera;
 use App\Entity\Camera;
+use App\Handler\CreateCameraHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/cameras', name: 'api_camera_')]
 class CameraController extends AbstractController
@@ -17,6 +20,7 @@ class CameraController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
+        private ValidatorInterface $validator,
     ) {}
 
     #[Route('', name: 'list', methods: ['GET'])]
@@ -39,17 +43,32 @@ class CameraController extends AbstractController
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, CreateCameraHandler $handler): JsonResponse
     {
-        $camera = $this->serializer->deserialize(
+        /** @var CreateCamera $input */
+        $input = $this->serializer->deserialize(
             $request->getContent(),
-            Camera::class,
+            CreateCamera::class,
             'json'
         );
-        $this->entityManager->persist($camera);
-        $this->entityManager->flush();
-        $data = $this->serializer->serialize($camera, 'json', ['groups' => 'camera:read']);
-        return new JsonResponse($data, Response::HTTP_CREATED, json: true);
+
+        $errors = $this->validator->validate($input);
+
+        if (count($errors) > 0) {
+            return $this->json([
+                'message' => 'Invalid payload.',
+                'errors' => (string) $errors,
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $camera = $handler->handle($input);
+
+        return new JsonResponse(
+            $this->serializer->serialize($camera, 'json', ['groups' => ['camera:read']]),
+            Response::HTTP_CREATED,
+            [],
+            true
+        );
     }
 
     #[Route('/{id}', name: 'update', methods: ['PATCH', 'PUT'])]
