@@ -64,6 +64,6 @@ HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
   CMD curl -f http://localhost:8000/health || exit 1
 
 # Start services
-CMD ["sh", "-lc", "if [ ! -f /app/vendor/autoload.php ]; then composer install --no-interaction --prefer-dist; fi && mkdir -p /app/var/cache /app/var/log && chown -R www-data:www-data /app/var && php /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+CMD ["sh", "-lc", "php /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 8000
