@@ -28,9 +28,11 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist
 FROM php:8.2-fpm-alpine
 
 RUN apk add --no-cache \
+    git \
     postgresql-dev \
     nginx \
     supervisor \
+    su-exec \
     curl \
     && docker-php-ext-install \
     pdo \
@@ -64,6 +66,6 @@ HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
   CMD curl -f http://localhost:8000/health || exit 1
 
 # Start services
-CMD ["sh", "-lc", "php /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+CMD ["sh", "-lc", "mkdir -p /app/var/cache /app/var/log && chown -R www-data:www-data /app/var && su-exec www-data php /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 8000

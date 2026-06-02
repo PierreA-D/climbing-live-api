@@ -1,0 +1,35 @@
+services:
+    app:
+        container_name: climbing-live-api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        env_file:
+            - .env.prod.local
+        ports:
+            - "8000:8000"
+        depends_on:
+            db:
+                condition: service_healthy
+
+    db:
+        container_name: climbing-live-db
+        image: postgres:16-alpine
+        restart: always
+        env_file:
+            - .env.prod.local
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    db_data:

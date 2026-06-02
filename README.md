@@ -34,6 +34,27 @@ Le projet expose des endpoints REST pour gerer les competitions, les athletes, l
 docker compose up --build -d
 ```
 
+### Lancer le projet en production
+
+Le mode production utilise un fichier Compose dedie et un fichier d'environnement local ignore par Git.
+
+Commande de demarrage:
+
+```bash
+docker compose -f docker-compose.prod.yml up --build -d
+```
+
+Variables utilisees:
+
+- `.env.prod.local` pour `APP_ENV`, `APP_DEBUG`, `APP_SECRET`, `API_TOKEN_SECRET` et la configuration PostgreSQL.
+- `docker-compose.prod.yml` pour lancer uniquement les services necessaires sans montage du code source ni exposition du port PostgreSQL.
+
+Arret:
+
+```bash
+docker compose -f docker-compose.prod.yml down
+```
+
 L'API sera accessible sur l'adresse suivante:
 
 ```text
