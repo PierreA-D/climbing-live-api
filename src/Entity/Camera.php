@@ -19,9 +19,9 @@ class Camera
     #[Groups(['camera:read', 'camera:list'])]
     private string $name = '';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['camera:read', 'camera:list'])]
-    private string $location = '';
+    private ?string $location = null;
 
     #[ORM\Column(enumType: Status::class)]
     #[Groups(['camera:read', 'camera:list'])]
@@ -44,6 +44,7 @@ class Camera
     private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'cameras')]
+    #[Groups(['camera:read', 'camera:list'])]
     private ?Competition $competition = null;
 
     #[ORM\Column(length: 255)]
@@ -102,12 +103,12 @@ class Camera
         return $this;
     }
 
-    public function getLocation(): string
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
-    public function setLocation(string $location): self
+    public function setLocation(?string $location): self
     {
         $this->location = $location;
         return $this;

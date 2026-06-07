@@ -27,7 +27,7 @@ class CameraController extends AbstractController
     public function list(): JsonResponse
     {
         $cameras = $this->entityManager->getRepository(Camera::class)->findAll();
-        $data = $this->serializer->serialize($cameras, 'json', ['groups' => 'camera:list']);
+        $data = $this->serializer->serialize($cameras, 'json', ['groups' => 'camera:list', 'competition:list']);
         return new JsonResponse($data, json: true);
     }
 

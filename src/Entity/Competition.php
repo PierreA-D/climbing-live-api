@@ -16,7 +16,7 @@ class Competition
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['competition:read', 'competition:list'])]
+    #[Groups(['competition:read', 'competition:list', 'camera:read', 'camera:list'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -46,7 +46,6 @@ class Competition
      * @var Collection<int, Camera>
      */
     #[ORM\OneToMany(targetEntity: Camera::class, mappedBy: 'competition', cascade: ['remove', 'persist'])]
-    #[Groups(['competition:read', 'competition:list'])]
     private Collection $cameras;
 
     #[ORM\Column(enumType: Category::class, nullable: true)]

@@ -9,10 +9,12 @@ services:
             - .env.prod.local
         ports:
             - "8000:8000"
+        networks:
+            - climbing-live-network
+            - default
         depends_on:
             db:
                 condition: service_healthy
-
     db:
         container_name: climbing-live-db
         image: postgres:16-alpine
@@ -21,6 +23,8 @@ services:
             - .env.prod.local
         volumes:
             - db_data:/var/lib/postgresql/data
+        networks:
+            - default
         healthcheck:
             test:
                 [
@@ -33,3 +37,9 @@ services:
 
 volumes:
     db_data:
+
+networks:
+  climbing-live-network:
+    external: true
+  default:
+    driver: bridge
