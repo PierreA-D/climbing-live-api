@@ -210,6 +210,13 @@ Champs principaux:
 - `rtmpUrl`
 - `hlsUrl`
 - `authorized`
+- `token`
+- `blocked`
+- `allowedPaths`
+- `lastSeenAt`
+- `lastIp`
+- `lastProtocol`
+- `currentPath`
 - `competition`
 
 Particularites:
@@ -231,6 +238,13 @@ curl -X POST http://localhost:8000/api/cameras \
     "rtmpUrl": "rtmp://mediamtx/live/cam-finale-1",
     "hlsUrl": "http://localhost:8888/live/cam-finale-1/index.m3u8",
     "authorized": true,
+    "token": "camera-secret",
+    "blocked": false,
+    "allowedPaths": ["live/cam-finale-1"],
+    "lastSeenAt": "2026-06-11T12:00:00+00:00",
+    "lastIp": "192.168.1.10",
+    "lastProtocol": "rtmp",
+    "currentPath": "live/cam-finale-1",
     "competition": "/api/competitions/1"
   }'
 ```

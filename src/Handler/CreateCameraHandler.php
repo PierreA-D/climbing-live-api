@@ -34,6 +34,17 @@ final class CreateCameraHandler
         $camera->setRtmpUrl($input->rtmpUrl);
         $camera->setHlsUrl($input->hlsUrl);
         $camera->setAuthorized($input->authorized);
+        $camera->setToken($input->token);
+        $camera->setBlocked($input->blocked);
+        $camera->setAllowedPaths($input->allowedPaths);
+
+        if ($input->lastSeenAt instanceof \DateTimeImmutable) {
+            $camera->setLastSeenAt($input->lastSeenAt);
+        }
+
+        $camera->setLastIp($input->lastIp);
+        $camera->setLastProtocol($input->lastProtocol);
+        $camera->setCurrentPath($input->currentPath);
         $camera->setStatus(Status::OFFLINE);
         $camera->setCompetition($competition);
 
